@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Canvas</title>
+		<script type="text/javascript">
+			r = 0;
+			g = 0;
+			b = 0;
+
+			function init() {
+				var canvas = document.getElementById('canvas');
+			}
+
+			function draw() {
+				if (canvas.getContext) {
+					var ctx = canvas.getContext('2d');
+				} else {
+					return;
+				}
+
+				r = Math.floor(Math.random() * 255 + 1);
+				g = Math.floor(Math.random() * 255 + 1);
+				
+				if (b == 255) {
+					b = 0;
+				} else {
+					b++;
+				}
+
+				ctx.fillStyle = 'rgb(' + r + ', ' + g + ', ' + b + ')';
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+			}
+
+			var inter = setInterval(draw, 100);
+		</script>
+		<script src="js/jscolor/jscolor.js"></script>
+		<style type="text/css">
+			* {
+				text-align: center;
+			}
+			canvas { 
+				display: block;
+				margin: auto;
+				background-color: white;
+				border-radius: 500px;
+			}
+		</style>
+	</head>
+	<body onload="init(); draw();">
+		<canvas id="canvas" width="500" height="500"></canvas>
+	</body>
+</html>

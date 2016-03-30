@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Canvas Gradient</title>
+		<link rel="shortcut icon" href="favicon.ico">
+		<script type="text/javascript">
+			function init() {
+				var canvas = document.getElementById('canvas');
+			}
+
+			/*
+				rgba -> must be integer values!!! (reason for Math.floor())
+			 */
+			function draw() {
+				if (canvas.getContext) {
+					var ctx = canvas.getContext('2d');
+				} else {
+					return;
+				}
+
+				color1 = hexToRgb(document.getElementById('color-1').value);
+				color2 = hexToRgb(document.getElementById('color-2').value);
+				var fillColor = [0,0,0];
+
+				if (document.getElementById('vertical').checked) {
+
+				}
+
+				for (var row = 0; row < canvas.height; row++) {
+					for (var i = 0; i < 3; i++) {
+						fillColor[i] = getStepColor(color1[i], color2[i], canvas.height, row);
+					}
+
+					ctx.fillStyle = 'rgb(' + fillColor[0] + ', ' + fillColor[1] + ', ' + fillColor[2] + ')';
+
+					// only works for square canvas
+					if (document.getElementById('vertical').checked) {
+						ctx.fillRect(0, row, canvas.width, 1);
+					} else {
+						ctx.fillRect(row, 0, 1, canvas.height);
+					}
+				} 
+
+				/*for (var col = 0; col < canvas.width; col++) {
+					for (var i = 0; i < 3; i++) {
+						fillColor[i] = getStepColor(color1[i], color2[i], canvas.width, col);
+					}
+					ctx.fillStyle = 'rgb(' + fillColor[0] + ', ' + fillColor[1] + ', ' + fillColor[2] + ')';
+					ctx.fillRect(col, 0, 1, canvas.height);
+				} */
+
+				document.getElementById('download').href = canvas.toDataURL('image/png');
+
+				/* 
+				for (var row = 0; row < canvas.height; row++) {
+					for (var col = 0; col < canvas.width; col++) {
+						var r = Math.floor(0 + (255 / canvas.width) * row);
+						var g = Math.floor(255 - (255 / canvas.width) * row);
+						var b = Math.floor(0 + (255 / canvas.width) * (row + col));
+						// cool split effect var b = Math.floor(0 + (255 / canvas.width) * (row + col));
+						var a = 1;
+						ctx.fillStyle = 'rgba(' + r + ', ' + g + ', ' + b + ', ' + a + ')';
+						ctx.fillRect(row, col, 1, 1);
+					}
+				} 
+				*/
+			}
+
+			function getStepColor(color1, color2, rows, i) {
+				var inc = (color1 - color2) / rows;
+				return Math.floor(color1 - (inc * i));
+			}
+
+			function hexToRgb(string) {
+				if (string.length != 6) return false;
+
+				var rgb = [];
+				for (var i = 0; i < 6; i += 2) {
+					rgb[i / 2] = parseInt(string.substring(i, i + 2), 16);
+				}
+
+				return rgb;
+			}
+		</script>
+		<script src="js//jscolor.min.js"></script>
+		<style type="text/css">
+			* {
+				text-align: center;
+			}
+			canvas { 
+				display: block;
+				margin: auto;
+				background-color: white;
+			}
+		</style>
+	</head>
+	<body onload="init(); draw();">
+		<form>
+			<p>
+				<input id="color-1" class="jscolor" value="FF0000" onchange="draw()">
+				<input id="color-2" class="jscolor" value="00FF00" onchange="draw()">
+				<input id="vertical" type="radio" name="direction" value="vertical" checked="checked" onchange="draw()">Vertical
+				<input id="horizontal" type="radio" name="direction" value="horizontal" onchange="draw()">Horizontal
+			</p>
+		</form>
+		<canvas id="canvas" width="500" height="500"></canvas>
+		<p>
+			<a id="download" href="#" download>download screenshot</a>
+		</p>
+	</body>
+</html>
